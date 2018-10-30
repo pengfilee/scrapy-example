@@ -1,4 +1,5 @@
 import scrapy
+from scrapy import log
 from tutorial.items import TutorialItem
 class DemzSpider(scrapy.Spider):
     name='test'
@@ -7,9 +8,8 @@ class DemzSpider(scrapy.Spider):
     ]
 
     def parse(self,response):
-        for sel in response.xpath('//p/span'):
-            item=TutorialItem()
-            item['image_urls'] =['http://cms-bucket.nosdn.127.net/catchpic/5/54/54841f0d54ec20d30f315aaaa8a8585e.png'] 
-            yield item
+        item=TutorialItem()
+        item['image_urls']=filter(lambda x:x.startswith('http'),response.xpath('//img/@src').extract())
+        yield item
 
 
